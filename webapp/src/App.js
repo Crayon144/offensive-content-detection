@@ -5,6 +5,17 @@ function App() {
     const [ openUrl , setOpenUrl ] = useState(false);
     const [ openImage , setOpenImage ] = useState(false);
     const [ tweetUrl , setTweetUrl ] = useState('');
+
+    const onUrlSubmit = (e) => {
+        e.preventDefault();
+        setTweetUrl('');
+    }
+
+    const onImageSubmit = (e) => {
+        e.preventDefault();
+        console.log('submiiting url');
+    }
+
     return (
     <>
         <Navbar bg="dark" variant="dark">
@@ -49,23 +60,33 @@ function App() {
                 <div>
                     <Collapse in={openUrl}>
                         <div id="url-collapse">
-                        <Form.Group className="m-3">
-                            <Form.Label>Enter URL of the Tweet to be Checked</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter URL"
-                                value = {tweetUrl}
-                                onChange={e => setTweetUrl(e.target.value)}
-                            />
-                        </Form.Group>
+                        <Form onSubmit={onUrlSubmit}>
+                            <Form.Group className="m-3">
+                                <Form.Label>Enter URL of the Tweet to be Checked</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter URL"
+                                    value = {tweetUrl}
+                                    onChange={e => setTweetUrl(e.target.value)}
+                                />
+                            </Form.Group>
+                            <Button variant="primary" type="submit" className='mb-3 mx-3'>
+                                Submit
+                            </Button>
+                        </Form>
                         </div>
                     </Collapse>
                     <Collapse in={openImage}>
                         <div id="image-collapse">
-                            <Form.Group className="m-3">
-                                <Form.Label>Upload the Image file to be checked</Form.Label>
-                                <Form.Control type="file" />
-                            </Form.Group>
+                            <Form onSubmit={onImageSubmit}>
+                                <Form.Group className="m-3" onSubmit={onImageSubmit}>
+                                    <Form.Label>Upload the Image file to be checked</Form.Label>
+                                    <Form.Control type="file" />
+                                </Form.Group>
+                                <Button variant="primary" type="submit" className='mb-3 mx-3'>
+                                    Submit
+                                </Button>
+                            </Form>
                         </div>
                     </Collapse>
                 </div>
