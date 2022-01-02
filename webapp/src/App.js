@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import React , { useState } from 'react';
 import { Navbar , Container , Nav , Form , Button , Collapse, Card , Row , Col } from 'react-bootstrap';
+import * as nsfwjs from 'nsfwjs';
 
 function App() {
     const [ openUrl , setOpenUrl ] = useState(false);
@@ -107,3 +108,4 @@ function App() {
 }
 
 export default App;
+
