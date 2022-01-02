@@ -6,8 +6,17 @@ function App() {
     const [ openImage , setOpenImage ] = useState(false);
     const [ tweetUrl , setTweetUrl ] = useState('');
 
-    const onUrlSubmit = (e) => {
+    const onUrlSubmit = async (e) => {
         e.preventDefault();
+        const response = await fetch('http://localhost:8080/scrapeURL', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                url: tweetUrl
+            }),
+        });
+        const data = await response.json();
+        console.log(data);
         setTweetUrl('');
     }
 
