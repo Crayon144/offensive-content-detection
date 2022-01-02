@@ -62,7 +62,7 @@ function App() {
                         <div id="url-collapse">
                         <Form onSubmit={onUrlSubmit}>
                             <Form.Group className="m-3">
-                                <Form.Label>Enter URL of the Tweet to be Checked</Form.Label>
+                                <Form.Label>Enter URL of the Hashtag on Twitter to be Checked</Form.Label>
                                 <Form.Control
                                     type="text"
                                     placeholder="Enter URL"
