@@ -105,7 +105,7 @@ function App() {
 									setOpenImage(true);
 								}
 								setDisplayForm(true);
-                                setTweetData([]);
+								setTweetData([]);
 							}}
 							aria-controls='image-collapse'
 							aria-expanded={openImage}>
@@ -133,7 +133,8 @@ function App() {
 									<Button
 										variant='primary'
 										type='submit'
-										className='mb-3 mx-3'>
+										className='mb-3 mx-3'
+										disabled={tweetUrl.length === 0}>
 										Submit
 									</Button>
 								</Form>
@@ -141,42 +142,34 @@ function App() {
 						</Collapse>
 						<Collapse in={openImage}>
 							<div id='image-collapse'>
-                                <Form>
-                                    <Form.Group className='m-3'>
-                                        <Form.Label>
-                                            Upload the Image file to be
-                                            checked
-                                        </Form.Label>
-                                        <Form.Control
-                                            type='file'
-                                            onChange={e =>
-                                                onImageChange(
-                                                    e.target.files[0]
-                                                )
-                                            }
-                                        />
-                                    </Form.Group>
-                                </Form>
+								<Form>
+									<Form.Group className='m-3'>
+										<Form.Label>
+											Upload the Image file to be checked
+										</Form.Label>
+										<Form.Control
+											type='file'
+											onChange={e =>
+												onImageChange(e.target.files[0])
+											}
+										/>
+									</Form.Group>
+								</Form>
 							</div>
 						</Collapse>
 					</div>
 				</Card>
 				<img hidden alt='' src={dataUri} ref={dropped} />
 				{isLoading ? <Spinner /> : null}
-                {displayForm ? 
-                    null
-                    :
-                    matureContent ? (
-                        <Alert className='m-3' variant='danger'>
-                            The image uploaded contains mature
-                            content
-                        </Alert>
-                    ) : (
-                        <Alert className='m-3' variant='success'>
-                            The image uploaded is safe to view
-                        </Alert>
-                    )
-                }
+				{displayForm ? null : matureContent ? (
+					<Alert className='m-3' variant='danger'>
+						The image uploaded contains mature content
+					</Alert>
+				) : (
+					<Alert className='m-3' variant='success'>
+						The image uploaded is safe to view
+					</Alert>
+				)}
 				<ListGroup as='ol' numbered>
 					{tweetData.length !== 0 ? (
 						<Alert variant='success' className='m-3'>
