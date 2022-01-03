@@ -1,11 +1,14 @@
-import React , { useState } from 'react';
-import { Navbar , Container , Nav , Form , Button , Collapse, Card , Row , Col } from 'react-bootstrap';
+import React , { useRef, useState } from 'react';
+import { Navbar , Container , Form , Button , Collapse, Card } from 'react-bootstrap';
 import * as nsfwjs from 'nsfwjs';
 
 function App() {
     const [ openUrl , setOpenUrl ] = useState(false);
     const [ openImage , setOpenImage ] = useState(false);
     const [ tweetUrl , setTweetUrl ] = useState('');
+    const [ dataUri , setDataUri ] = useState();
+    const [ imagePrediction , setImagePrediction ] = useState('');
+    const dropped = useRef();
 
     const onUrlSubmit = async (e) => {
         e.preventDefault();
@@ -21,9 +24,21 @@ function App() {
         setTweetUrl('');
     }
 
-    const onImageSubmit = (e) => {
-        e.preventDefault();
-        console.log('submiiting url');
+    const onImageChange = (file) => {
+        if(!file) {
+            setDataUri('');
+            return;
+        }
+      
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            setDataUri(event.target.result)
+            const img = dropped.current;
+            const model = await nsfwjs.load()
+            const predictions = await model.classify(img,1)
+            setImagePrediction(predictions[0].className);
+        };
+        reader.readAsDataURL(file);
     }
 
     return (
@@ -88,20 +103,26 @@ function App() {
                     </Collapse>
                     <Collapse in={openImage}>
                         <div id="image-collapse">
-                            <Form onSubmit={onImageSubmit}>
-                                <Form.Group className="m-3" onSubmit={onImageSubmit}>
+                            <Form>
+                                <Form.Group className="m-3">
                                     <Form.Label>Upload the Image file to be checked</Form.Label>
-                                    <Form.Control type="file" />
+                                    <Form.Control
+                                        type="file"
+                                        onChange={ e => onImageChange(e.target.files[0]) }
+                                    />
                                 </Form.Group>
-                                <Button variant="primary" type="submit" className='mb-3 mx-3'>
-                                    Submit
-                                </Button>
                             </Form>
+                            <div className='mx-3 mb-3'>Prediction : {imagePrediction} </div>
                         </div>
                     </Collapse>
                 </div>
 
             </Card>
+            <img
+                hidden
+                src={dataUri}
+                ref={dropped}
+            />
         </Container>
     </>
     );
