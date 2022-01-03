@@ -7,6 +7,7 @@ function App() {
     const [ openImage , setOpenImage ] = useState(false);
     const [ tweetUrl , setTweetUrl ] = useState('');
     const [ dataUri , setDataUri ] = useState();
+    const [ imagePrediction , setImagePrediction ] = useState('');
     const dropped = useRef();
 
     const onUrlSubmit = async (e) => {
@@ -34,8 +35,8 @@ function App() {
             setDataUri(event.target.result)
             const img = dropped.current;
             const model = await nsfwjs.load()
-            const predictions = await model.classify(img)
-            console.log('Predictions: ', predictions)
+            const predictions = await model.classify(img,1)
+            setImagePrediction(predictions[0].className);
         };
         reader.readAsDataURL(file);
     }
@@ -111,6 +112,7 @@ function App() {
                                     />
                                 </Form.Group>
                             </Form>
+                            <div className='mx-3 mb-3'>Prediction : {imagePrediction} </div>
                         </div>
                     </Collapse>
                 </div>
