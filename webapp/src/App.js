@@ -89,6 +89,7 @@ function App() {
 									setOpenUrl(true);
 									setOpenImage(false);
 								}
+								setDisplayForm(true);
 							}}
 							aria-controls='url-collapse'
 							aria-expanded={openUrl}>
@@ -104,6 +105,7 @@ function App() {
 									setOpenImage(true);
 								}
 								setDisplayForm(true);
+                                setTweetData([]);
 							}}
 							aria-controls='image-collapse'
 							aria-expanded={openImage}>
@@ -139,39 +141,42 @@ function App() {
 						</Collapse>
 						<Collapse in={openImage}>
 							<div id='image-collapse'>
-								{displayForm ? (
-									<Form>
-										<Form.Group className='m-3'>
-											<Form.Label>
-												Upload the Image file to be
-												checked
-											</Form.Label>
-											<Form.Control
-												type='file'
-												onChange={e =>
-													onImageChange(
-														e.target.files[0]
-													)
-												}
-											/>
-										</Form.Group>
-									</Form>
-								) : matureContent ? (
-									<Alert className='m-3' variant='danger'>
-										The image uploaded contains mature
-										content
-									</Alert>
-								) : (
-									<Alert className='m-3' variant='success'>
-										The image uploaded is safe to view
-									</Alert>
-								)}
+                                <Form>
+                                    <Form.Group className='m-3'>
+                                        <Form.Label>
+                                            Upload the Image file to be
+                                            checked
+                                        </Form.Label>
+                                        <Form.Control
+                                            type='file'
+                                            onChange={e =>
+                                                onImageChange(
+                                                    e.target.files[0]
+                                                )
+                                            }
+                                        />
+                                    </Form.Group>
+                                </Form>
 							</div>
 						</Collapse>
 					</div>
 				</Card>
 				<img hidden alt='' src={dataUri} ref={dropped} />
 				{isLoading ? <Spinner /> : null}
+                {displayForm ? 
+                    null
+                    :
+                    matureContent ? (
+                        <Alert className='m-3' variant='danger'>
+                            The image uploaded contains mature
+                            content
+                        </Alert>
+                    ) : (
+                        <Alert className='m-3' variant='success'>
+                            The image uploaded is safe to view
+                        </Alert>
+                    )
+                }
 				<ListGroup as='ol' numbered>
 					{tweetData.length !== 0 ? (
 						<Alert variant='success' className='m-3'>
@@ -183,7 +188,7 @@ function App() {
 							return (
 								<ListGroup.Item
 									as='li'
-									className='d-flex justify-content-between align-items-start'>
+									className='d-flex justify-content-between align-items-start mb-3 shadow'>
 									<br />
 									<div className='ms-2 me-auto'>
 										<div className='fw-bold'>
