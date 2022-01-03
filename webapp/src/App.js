@@ -1,13 +1,16 @@
 import React , { useRef, useState } from 'react';
-import { Navbar , Container , Form , Button , Collapse, Card } from 'react-bootstrap';
+import { Navbar , Container , Form , Button , Collapse, Card, Alert } from 'react-bootstrap';
 import * as nsfwjs from 'nsfwjs';
 
 function App() {
     const [ openUrl , setOpenUrl ] = useState(false);
     const [ openImage , setOpenImage ] = useState(false);
     const [ tweetUrl , setTweetUrl ] = useState('');
+
+    // image classification
     const [ dataUri , setDataUri ] = useState();
-    const [ imagePrediction , setImagePrediction ] = useState('');
+    const [ displayForm , setDisplayForm ] = useState(true);
+    const [ matureContent , setMatureContent ] = useState(true);
     const dropped = useRef();
 
     const onUrlSubmit = async (e) => {
@@ -36,7 +39,9 @@ function App() {
             const img = dropped.current;
             const model = await nsfwjs.load()
             const predictions = await model.classify(img,1)
-            setImagePrediction(predictions[0].className);
+            if(predictions[0].className==='Neutral' || predictions[0].className==='Drawing') setMatureContent(false);
+            else setMatureContent(true);
+            setDisplayForm(false);
         };
         reader.readAsDataURL(file);
     }
@@ -75,6 +80,7 @@ function App() {
                                     setOpenUrl(false)
                                     setOpenImage(true)
                                 }
+                                setDisplayForm(true);
                             }}
                             aria-controls="image-collapse"
                             aria-expanded={openImage}
@@ -103,18 +109,29 @@ function App() {
                     </Collapse>
                     <Collapse in={openImage}>
                         <div id="image-collapse">
-                            <Form>
-                                <Form.Group className="m-3">
-                                    <Form.Label>Upload the Image file to be checked</Form.Label>
-                                    <Form.Control
-                                        type="file"
-                                        onChange={ e => onImageChange(e.target.files[0]) }
-                                    />
-                                </Form.Group>
-                            </Form>
-                            <div className='mx-3 mb-3'>Prediction : {imagePrediction} </div>
+                            { displayForm ? 
+                                <Form>
+                                    <Form.Group className="m-3">
+                                        <Form.Label>Upload the Image file to be checked</Form.Label>
+                                        <Form.Control
+                                            type="file"
+                                            onChange={ e => onImageChange(e.target.files[0]) }
+                                        />
+                                    </Form.Group>
+                                </Form>
+                                :
+                                    matureContent ?
+                                        <Alert className='m-3' variant='danger'>
+                                            The image uploaded contains mature content
+                                        </Alert>
+                                    :
+                                        <Alert className='m-3' variant='success'>
+                                            The image uploaded is safe to view 
+                                        </Alert>
+                            }
                         </div>
                     </Collapse>
+                    
                 </div>
 
             </Card>
