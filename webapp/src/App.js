@@ -44,6 +44,7 @@ function App() {
 	};
 
 	const onImageChange = file => {
+        setDisplayForm(true);
 		if (!file) {
 			setDataUri('');
 			return;
